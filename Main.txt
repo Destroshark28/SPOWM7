@@ -409,26 +409,6 @@ int delFile(struct Dir* pdir, const char* n)
 	return 1;
 }
 
-//Копирует файл в буффер(Возвращаемые значение: 1 - успешно, 0 - такого фалйа нет, -1 - ошибка выделения памяти)
-int copy(struct Dir* pdir, char* fileName)
-{
-	int i = 0;
-	for (; i < pdir->num_of_files; i++)						//Ищем файл в директории
-	{
-		if (!strcmp(pdir->filesInfo[i].name, fileName)) break;
-	}
-	if (i == pdir->num_of_files)
-	{
-		return 0;
-	}
-	buffer.bufferSize = pdir->filesInfo[i].num_of_segments*SIZE_OF_SEGMENT;
-	buffer.fileInfo = (char*)malloc(sizeof(char)*buffer.bufferSize);
-	if (!buffer.fileInfo) return -1;
-	readFile(pdir, fileName, buffer.fileInfo);
-	strcpy(buffer.fileName, fileName);
-	return 1;
-}
-
 int main()
 {
 	struct Dir root;										//Корень дерева каталогов
@@ -545,14 +525,6 @@ int main()
 			}
 		}
 		
-		else if (!strcmp(buf, "copy"))
-		{
-			puts("Enter file name");
-			gets_s(buf, BUFFER_SIZE);
-			if (!copy(curDir, buf))
-				puts("There is no such file");
-		}
-
 		else if (!strcmp(buf, "showMask"))
 		{
 			showMask();
